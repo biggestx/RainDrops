@@ -1,4 +1,4 @@
-Shader "Custom/RenderFeature/KawaseBlur"
+Shader "Custom/RenderFeature/RainDrops"
 {
     Properties
     {

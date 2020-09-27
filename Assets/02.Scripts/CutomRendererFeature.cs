@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 public class CutomRendererFeature : ScriptableRendererFeature
 {
     [System.Serializable]
-    public class KawaseBlurSettings
+    public class RainDropsSettings
     {
         public RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
         public Material blurMaterial = null;
@@ -20,13 +20,12 @@ public class CutomRendererFeature : ScriptableRendererFeature
         public string targetName = "_blurTexture";
     }
 
-    public KawaseBlurSettings settings = new KawaseBlurSettings();
+    public RainDropsSettings settings = new RainDropsSettings();
 
     class CustomRenderPass : ScriptableRenderPass
     {
         public Material blurMaterial;
         public int passes;
-        public int downsample;
         public bool copyToFramebuffer;
         public string targetName;
         string profilerTag;
@@ -51,8 +50,8 @@ public class CutomRendererFeature : ScriptableRendererFeature
 
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
-            var width = cameraTextureDescriptor.width / downsample;
-            var height = cameraTextureDescriptor.height / downsample;
+            var width = cameraTextureDescriptor.width;
+            var height = cameraTextureDescriptor.height;
 
             tmpId1 = Shader.PropertyToID("tmpBlurRT1");
             tmpId2 = Shader.PropertyToID("tmpBlurRT2");
@@ -73,33 +72,9 @@ public class CutomRendererFeature : ScriptableRendererFeature
             RenderTextureDescriptor opaqueDesc = renderingData.cameraData.cameraTargetDescriptor;
             opaqueDesc.depthBufferBits = 0;
 
-            // first pass
-            // cmd.GetTemporaryRT(tmpId1, opaqueDesc, FilterMode.Bilinear);
             cmd.SetGlobalFloat("_offset", 1.5f);
             cmd.Blit(source, tmpRT1, blurMaterial);
-
-            for (var i = 1; i < passes - 1; i++)
-            {
-                cmd.SetGlobalFloat("_offset", 0.5f + i);
-                cmd.Blit(tmpRT1, tmpRT2, blurMaterial);
-
-                // pingpong
-                var rttmp = tmpRT1;
-                tmpRT1 = tmpRT2;
-                tmpRT2 = rttmp;
-            }
-
-            // final pass
-            cmd.SetGlobalFloat("_offset", 0.5f + passes - 1f);
-            if (copyToFramebuffer)
-            {
-                cmd.Blit(tmpRT1, source, blurMaterial);
-            }
-            else
-            {
-                cmd.Blit(tmpRT1, tmpRT2, blurMaterial);
-                cmd.SetGlobalTexture(targetName, tmpRT2);
-            }
+            cmd.Blit(tmpRT1, source, blurMaterial);
 
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
@@ -116,11 +91,9 @@ public class CutomRendererFeature : ScriptableRendererFeature
 
     public override void Create()
     {
-        scriptablePass = new CustomRenderPass("KawaseBlur");
+        scriptablePass = new CustomRenderPass("RainDrops");
         scriptablePass.blurMaterial = settings.blurMaterial;
         scriptablePass.passes = settings.blurPasses;
-        scriptablePass.downsample = settings.downsample;
-        scriptablePass.copyToFramebuffer = settings.copyToFramebuffer;
         scriptablePass.targetName = settings.targetName;
 
         scriptablePass.renderPassEvent = settings.renderPassEvent;
