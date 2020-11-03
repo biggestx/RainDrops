@@ -1,5 +1,28 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8571794973071715094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b98b4a6a59d78c245b49573fd7cc4078, type: 3}
+  m_Name: NewDeferred2DRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    renderPassEvent: 550
+    blurMaterial: {fileID: 2100000, guid: 27a71b5c5331a0e4cbce0c3614692335, type: 2}
+    blurPasses: 1
+    downsample: 1
+    copyToFramebuffer: 0
+    targetName: _blurTexture
+    TempPos: {x: 0, y: 0, z: 9.95}
+    SphereMesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+    SimpleMaterial: {fileID: 2100000, guid: e83ce0a16da17a6449166046adbd5412, type: 2}
 --- !u!114 &-7569280248841702271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,7 +35,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d286c6fc7ad84664db25a03daacc83c4, type: 3}
   m_Name: NewCutomRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 200
     blurMaterial: {fileID: 2100000, guid: a5d604f35b657234cb0e063316e5661c, type: 2}
@@ -34,7 +57,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererFeatures:
   - {fileID: -7569280248841702271}
-  m_RendererFeatureMap: 81f468aab783f496
+  - {fileID: -8571794973071715094}
+  m_RendererFeatureMap: 81f468aab783f496ead49426e3dd0a89
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
